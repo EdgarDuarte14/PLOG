@@ -18,6 +18,7 @@ mainMenu:-
 	).
 
 printMainMenu:-
+	clearScreen,
 	write('                                 '), nl,
 	write('       ===> Distrify <===        '), nl,
 	write('                                 '), nl,
@@ -50,6 +51,7 @@ gameModeMenu:-
 	).
 
 printGameModeMenu:-
+	clearScreen,
 	write('                                  '), nl,
 	write('      ===> Game Options <===      '), nl,
 	write('                                  '), nl,
@@ -66,14 +68,15 @@ printGameModeMenu:-
 	write('Choose your game option:'), nl.
 
 playerVsPlayer:-
+	clearScreen,
 	write('                                          '), nl,
 	write('       ==> Player vs Player choosen       '), nl,
 	write('                                          '), nl,
 	pressEnter, nl.
-	clearScreen.
 
 
 playerVsComputer:-
+	clearScreen,
 	write('                                         '), nl,
 	write('      ==> Player vs Computer choosen     '), nl,
 	write('                                         '), nl,
@@ -81,6 +84,7 @@ playerVsComputer:-
 
 
 computerVsComputer:-
+	clearScreen,
 	write('                                          '), nl,
 	write('     ==> Computer vs Computer choosen     '), nl,
 	write('                                          '), nl,
@@ -88,6 +92,7 @@ computerVsComputer:-
 
 
 helpMenu:-
+	clearScreen,
 	write('                                                                     '), nl,
 	write('                       ===> How to play <===                         '), nl,
 	write('                                                                     '), nl,
