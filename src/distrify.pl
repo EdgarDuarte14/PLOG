@@ -4,7 +4,7 @@
 
 :- include('menus.pl').
 :- include('utils.pl').
-
+:- include('print.pl').
 
 %-----------> Lauching the game <------------%
 distrify:-
@@ -18,7 +18,7 @@ changePlayer(Player, NextPlayer):-
 
 %--------> Main game program <-----------%
 
-
+/*
 % Codigo do prof %
 
 
@@ -58,7 +58,7 @@ update(Move, Value, (Move1, Value1), (Move, Value)):-
 % Codigo do prof %
 
 
-
+*/
 
 
 
@@ -145,7 +145,7 @@ checkCompletePath(Line, Column, Board, white):-
 	Column =< 8,
 	getPiece(Line, Column, Board, Piece),
 	(Piece \== white -> Line1 is Line + 1, checkCompletePath(Line1, Column, Board, white);
-		(\+ path([[Line, Column]] Board, white) -> Line1 is Line + 1, checkCompletePath(Line1, Column, Board, white))).
+		(\+ path([[Line, Column]], Board, white) -> Line1 is Line + 1, checkCompletePath(Line1, Column, Board, white))).
 
 
 
@@ -154,7 +154,7 @@ checkCompletePath(Line, Column, Board, black):-
 	Column =< 8,
 	getPiece(Line, Column, Board, Piece),
 	(Piece \== black -> Line1 is Line + 1, checkCompletePath(Line1, Column, Board, black);
-		(\+ path([[Line, Column]] Board, black) -> Line1 is Line + 1, checkCompletePath(Line1, Column, Board, black);
+		(\+ path([[Line, Column]], Board, black) -> Line1 is Line + 1, checkCompletePath(Line1, Column, Board, black);
 			true)).
 
 
