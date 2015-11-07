@@ -70,49 +70,49 @@ update(Move, Value, (Move1, Value1), (Move, Value)):-
 neighbor(Line, Column, Line1, Column1):-
 	Column1 is Column + 1,
 	Line1 is Line + 1,
-	Line1 =< 8,
-	Column1 =< 8.
+	Line1 =< 9,
+	Column1 =< 9.
 
 
 neighbor(Line, Column, Line1, Column1):-
 	Column1 is Column + 1,
 	Line1 is Line - 1,
-	Line1 >= 0,
-	Column1 =< 8.
+	Line1 >= 1,
+	Column1 =< 9.
 
 
 neighbor(Line, Column, Line1, Column1):-
 	Column1 is Column - 1,
 	Line1 is Line - 1,
-	Line1 >= 0,
-	Column1 >= 0.
+	Line1 >= 1,
+	Column1 >= 1.
 
 
 neighbor(Line, Column, Line1, Column1):-
 	Column1 is Column - 1,
 	Line1 is Line + 1,
-	Line1 =< 8,
-	Column1 >= 0.
+	Line1 =< 9,
+	Column1 >= 1.
 
 
 neighbor(Line, Column, Line1, Column1):-
 	Column1 is Column + 1,
-	Column1 =< 8.
+	Column1 =< 9.
 
 
 neighbor(Line, Column, Line1, Column1):-
 	Column1 is Column - 1,
-	Column1 >= 0.
+	Column1 >= 1.
 
 
 neighbor(Line, Column, Line1, Column1):-
 	Line1 is Line + 1,
-	Line1 =< 8.
+	Line1 =< 9.
 
 
 neighbor(Line, Column, Line1, Column1):-
 	Line1 is Line - 1,
-	Line1 >= 0.
+	Line1 >= 1.
 
 
 
@@ -120,41 +120,41 @@ neighbor(Line, Column, Line1, Column1):-
 
 path([[Line,Column] | T], Board, Player):-
 	neighbor(Line, Column, Line1, Column1),
-	once(getPiece(Line1, Column1, Board, Piece)),
+	once(getCell(Line1, Column1, Board, Piece)),
 	Piece == Player,
 	\+ member([Line1, Column1], T),
 	path([[Line,Column] | [[Line, Column] | T]], Board, Player).
  
 % condicoes finais ---------- modificar % 
-path([[Line,8] | _], Board, white):-
-    getPiece(Line,8, Board, Piece),
-    Piece == white.
+path([[Line,9] | _], Board, 2):-
+    getCell(Line,9, Board, Piece),
+    Piece == 2.
 
-path([[8,Column] | _], Board, black):-
-    getPiece(8,Column, Board, Piece),
-    Piece == black.
+path([[9,Column] | _], Board, 1):-
+    getCell(9,Column, Board, Piece),
+    Piece == 1.
 
 
 % Tentativa de criar um caminho completo, tanto para o jogador 1 como para o jogador 2 %
 
-checkCompletePath(9, _, _, black).
-checkCompletePath(_, 9, _, white).
+checkCompletePath(9, _, _, 1).
+checkCompletePath(_, 9, _, 2).
 
-checkCompletePath(Line, Column, Board, white):-
-	Line =< 8,
-	Column =< 8,
-	getPiece(Line, Column, Board, Piece),
-	(Piece \== white -> Line1 is Line + 1, checkCompletePath(Line1, Column, Board, white);
-		(\+ path([[Line, Column]], Board, white) -> Line1 is Line + 1, checkCompletePath(Line1, Column, Board, white))).
+checkCompletePath(Line, Column, Board, 2):-
+	Line =< 9,
+	Column =< 9,
+	getCell(Line, Column, Board, Piece),
+	(Piece \== 2 -> Line1 is Line + 1, checkCompletePath(Line1, Column, Board, 2);
+		(\+ path([[Line, Column]], Board, 2) -> Line1 is Line + 1, checkCompletePath(Line1, Column, Board, 2))).
 
 
 
-checkCompletePath(Line, Column, Board, black):-
-	Line =< 8,
-	Column =< 8,
-	getPiece(Line, Column, Board, Piece),
-	(Piece \== black -> Line1 is Line + 1, checkCompletePath(Line1, Column, Board, black);
-		(\+ path([[Line, Column]], Board, black) -> Line1 is Line + 1, checkCompletePath(Line1, Column, Board, black);
+checkCompletePath(Line, Column, Board, 1):-
+	Line =< 9,
+	Column =< 9,
+	getCell(Line, Column, Board, Piece),
+	(Piece \== 1 -> Line1 is Line + 1, checkCompletePath(Line1, Column, Board, 1);
+		(\+ path([[Line, Column]], Board, 1) -> Line1 is Line + 1, checkCompletePath(Line1, Column, Board, 1);
 			true)).
 
 

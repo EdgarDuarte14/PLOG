@@ -1,15 +1,15 @@
 :-use_module(library(lists)).
 :-use_module(library(random)).
 
-starting_state([[1,1,0,0,0,0,0,0,0],
+starting_state([[0,1,0,0,0,0,0,0,0],
+                [0,1,0,0,0,0,0,0,0],
+                [2,2,1,2,0,0,1,0,0],
+                [0,1,0,0,0,0,0,0,0],
+                [0,1,0,0,0,0,0,0,0],
+                [1,2,0,2,0,2,0,2,0],
+                [2,1,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0,0,0],
-                [2,0,0,2,0,0,1,0,0],
-                [0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0]
+                [0,1,0,0,0,0,0,0,0]
                 ]).
 
 
@@ -38,7 +38,7 @@ show_board(Board):-
     show_lines(1, Board), nl.
 
 
-start:- starting_state(Board), show_board(Board), setRandomPieces(Board, 10, NewBoard), show_board(NewBoard) , humanVhuman(NewBoard).
+start:- starting_state(Board), show_board(Board), setRandomPieces(Board, 10, NewBoard), show_board(NewBoard) , humanVhuman(NewBoard, 1).
 
 
 
@@ -252,24 +252,129 @@ human_play(P, 2,  Line, Column, Board, Result) :-
 
 
 
-humanVhuman(Board):- 
-    write('JOGADOR 1: '),
-    nl,
+
+
+humanVhuman(Board, Player):-
+    write('JOGADOR '),
+    write(Player),
+    write(': '),
     write('nr de pecas a jogar (1 ou 2): '),
     read(N),
-    human_play(1, N,  Line, Column, Board , Board1),
-    
-    %%%% Depois aqui coloca-se funcao para ver se ganhou o jogo
+    human_play(Player, N,  Line, Column, Board , Board1),
     show_board(Board1),
+    (checkCompletePath(1,1,Board1,Player) -> write('JOGADOR'), write(Player), write(' VENCEU O JOGO'), ! ; (Player =:= 1-> humanVhuman(Board1, 2) ; humanVhuman(Board1, 1) ) ).
+
+    
 
 
-    write('JOGADOR 2: '),
+
+
+
+
+
+
+ %-------------> Check path <---------------%
+
+% Verificar os vizinhos de um ponto %
+
+neighbor(Line, Column, Line1, Column1):-
+    Column1 is Column + 1,
+    Line1 is Line + 1,
+    Line1 =< 9,
+    Column1 =< 9.
+
+
+neighbor(Line, Column, Line1, Column1):-
+    Column1 is Column + 1,
+    Line1 is Line - 1,
+    Line1 >= 1,
+    Column1 =< 9.
+
+
+neighbor(Line, Column, Line1, Column1):-
+    Column1 is Column - 1,
+    Line1 is Line - 1,
+    Line1 >= 1,
+    Column1 >= 9.
+
+
+neighbor(Line, Column, Line1, Column1):-
+    Column1 is Column - 1,
+    Line1 is Line + 1,
+    Line1 =< 9,
+    Column1 >= 1.
+
+
+neighbor(Line, Column, Line1, Column1):-
+    Column1 is Column + 1,
+    Line1 is Line,
+    Column1 =< 9.
+
+
+neighbor(Line, Column, Line1, Column1):-
+    Column1 is Column - 1,
+    Line1 is Line,
+    Column1 >= 1.
+
+
+neighbor(Line, Column, Line1, Column1):-
+    Line1 is Line + 1,
+    Column1 is Column,
+    Line1 =< 9.
+
+
+neighbor(Line, Column, Line1, Column1):-
+    Line1 is Line - 1,
+    Column1 is Column,
+    Line1 >= 1.
+
+
+
+% condicoes finais ---------- modificar % 
+path([[Line,9] | _], Board, 2):-
+    getCell(Line,9, Board, Piece),
+    Piece == 2.
+
+path([[9,Column] | _], Board, 1):-
+    getCell(9,Column, Board, Piece),
+    Piece == 1.
+
+
+path([[Line,Column] | T], Board, Player):-
+   neighbor(Line, Column, Line1, Column1),
+        getCell(Line1,Column1, Board, Piece),
+        Piece = Player,
+        \+ member([Line1, Column1], T),
+        path([[Line1, Column1] | [[Line,Column] | T]], Board, Player).
+ 
+
+
+% Tentativa de criar um caminho completo, tanto para o jogador 1 como para o jogador 2 %
+
+checkCompletePath(10, _, _, 1).
+checkCompletePath(_, 10, _, 2).
+
+checkCompletePath(Line, Column, Board, 2):-
+    write('checkCompletePath'),
+    Line =< 9,
+    Column =< 9,
+    getCell(Line, Column, Board, Piece),
+    (Piece \== 2 -> Line1 is Line + 1, checkCompletePath(Line1, Column, Board, 2);
+        (\+ path([[Line, Column]], Board, 2) -> Line1 is Line + 1, checkCompletePath(Line1, Column, Board, 2); true)).
+
+
+
+checkCompletePath(Line, Column, Board, 1):- 
+    write('checkCompletePath'),
     nl,
-    write('nr de pecas a jogar (1 ou 2): '),
-    read(N1),
-    human_play(2, N1,  Line2, Column2, Board1 , Board2),
-    show_board(Board2),
+    Line =< 9,
+    Column =< 9,
+    getCell(Line, Column, Board, Piece),
+    (Piece \== 1 -> Column1 is Column + 1, checkCompletePath(Line, Column1, Board, 1);
+        (\+ path([[Line, Column]], Board, 1) -> Column1 is Column + 1, checkCompletePath(Line, Column1, Board, 1);
+            true)).
 
-    %%%% Depois aqui coloca-se funcao para ver se ganhou o jogo
 
-    humanVhuman(Board2).
+
+
+%decide_white_play(Board, Line, Column, Line1, Column1, NrPieces):-
