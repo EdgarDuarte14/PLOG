@@ -79,12 +79,13 @@ choose_coords_dir(Board,Dir , Line, Column, Line1, Column1, Piece):-
     read(Column),
     getCell(Line,Column, Board, Cell),
     Cell = 0,
+    check_crosscut(Board, Line, Column, Piece),
     write('Direction of next piece (1-up, 2-down, 3-right, 4-left) : '),
     read(Dir),
-    (Dir =:= 1 -> Line1 is Line-1, Column1 is Column,  getCell(Line1, Column1, Board, Cell1), Cell1 = 0, check_three_in-row(Board, 1, Piece, Line1, Column1) ; 
-        (Dir =:= 2 -> Line1 is Line+1, Column1 is Column,  getCell(Line1, Column1, Board, Cell1), Cell1 = 0, check_three_in-row(Board, 2, Piece, Line1, Column1) ; 
-            (Dir =:= 3 -> Column1 is Column+1, Line1 is Line,  getCell(Line1, Column1, Board, Cell1), write(Cell1), Cell1 = 0, check_three_in-row(Board, 3, Piece, Line1, Column1) ; 
-                (Dir =:= 4 -> Column1 is Column-1, Line1 is Line,  getCell(Line1, Column1, Board, Cell1), Cell1 = 0, check_three_in-row(Board, 4, Piece, Line1, Column1) ; fail) ) ) ).
+    (Dir =:= 1 -> Line1 is Line-1, Column1 is Column,  getCell(Line1, Column1, Board, Cell1), Cell1 = 0, check_three_in-row(Board, 1, Piece, Line1, Column1), check_crosscut(Board, Line1, Column1, Piece) ; 
+        (Dir =:= 2 -> Line1 is Line+1, Column1 is Column,  getCell(Line1, Column1, Board, Cell1), Cell1 = 0, check_three_in-row(Board, 2, Piece, Line1, Column1) , check_crosscut(Board, Line1, Column1, Piece) ; 
+            (Dir =:= 3 -> Column1 is Column+1, Line1 is Line,  getCell(Line1, Column1, Board, Cell1), Cell1 = 0, check_three_in-row(Board, 3, Piece, Line1, Column1) , check_crosscut(Board, Line1, Column1, Piece) ; 
+                (Dir =:= 4 -> Column1 is Column-1, Line1 is Line,  getCell(Line1, Column1, Board, Cell1), Cell1 = 0, check_three_in-row(Board, 4, Piece, Line1, Column1) , check_crosscut(Board, Line1, Column1, Piece) ; fail) ) ) ).
 
 
 choose_coords_dir(Board, Dir, Line, Column, Line1, Column1, Piece):-write('Erro'), nl ,choose_coords_dir(Board, Dir, Line, Column, Line1, Column1, Piece),!.
@@ -135,22 +136,107 @@ check_three_in-row(Board, 4 , Piece, Line, Column):-
     getCell(Line, Column2, Board, Cell2),
     Cell2 \== Piece.
 
+check_crosscut_right_top(Board, Line, Column, 1):-
+    Line1 is Line-1,
+    getCell(Line1, Column, Board, Cell1),
+    (Cell1 =:= 2 -> Column1 is Column+1, getCell(Line, Column1, Board, Cell2), 
+        (Cell2 =:= 2 -> getCell(Line1, Column1, Board, Cell3) , Cell3 \==  1 ; !) ; ! ).
+
+check_crosscut_left_top(Board, Line, Column, 1):-
+    Line1 is Line-1,
+    getCell(Line1, Column, Board, Cell1),
+    (Cell1 =:= 2 -> Column1 is Column-1, getCell(Line, Column1, Board, Cell2), 
+        (Cell2 =:= 2 -> getCell(Line1, Column1, Board, Cell3) , Cell3 \==  1 ; !) ; ! ).
+
+check_crosscut_left_bottom(Board, Line, Column, 1):-
+    Line1 is Line+1,
+    getCell(Line1, Column, Board, Cell1),
+    (Cell1 =:= 2 -> Column1 is Column-1, getCell(Line, Column1, Board, Cell2), 
+        (Cell2 =:= 2 -> getCell(Line1, Column1, Board, Cell3) , Cell3 \==  1 ; !) ; ! ).
+
+check_crosscut_right_bottom(Board, Line, Column, 1):-
+    Line1 is Line+1,
+    getCell(Line1, Column, Board, Cell1),
+    (Cell1 =:= 2 -> Column1 is Column+1, getCell(Line, Column1, Board, Cell2), 
+        (Cell2 =:= 2 -> getCell(Line1, Column1, Board, Cell3) , Cell3 \==  1 ; !) ; ! ).
 
 
-choose_coords(Board, Line, Column):-
+check_crosscut_right_top(Board, Line, Column, 2):-
+    Line1 is Line-1,
+    getCell(Line1, Column, Board, Cell1),
+    (Cell1 =:= 1 -> Column1 is Column+1, getCell(Line, Column1, Board, Cell2), 
+        (Cell2 =:= 1 -> getCell(Line1, Column1, Board, Cell3) , Cell3 \==  2 ; !) ; ! ).
+
+check_crosscut_left_top(Board, Line, Column, 2):-
+    Line1 is Line-1,
+    getCell(Line1, Column, Board, Cell1),
+    (Cell1 =:= 1 -> Column1 is Column-1, getCell(Line, Column1, Board, Cell2), 
+        (Cell2 =:= 1 -> getCell(Line1, Column1, Board, Cell3) , Cell3 \==  2 ; !) ; ! ).
+
+check_crosscut_left_bottom(Board, Line, Column, 2):-
+    Line1 is Line+1,
+    getCell(Line1, Column, Board, Cell1),
+    (Cell1 =:= 1 -> Column1 is Column-1, getCell(Line, Column1, Board, Cell2), 
+        (Cell2 =:= 1 -> getCell(Line1, Column1, Board, Cell3) , Cell3 \==  2 ; !) ; ! ).
+
+check_crosscut_right_bottom(Board, Line, Column, 2):-
+    Line1 is Line+1,
+    getCell(Line1, Column, Board, Cell1),
+    (Cell1 =:= 1 -> Column1 is Column+1, getCell(Line, Column1, Board, Cell2), 
+        (Cell2 =:= 1 -> getCell(Line1, Column1, Board, Cell3) , Cell3 \==  2 ; !) ; ! ).
+
+check_crosscut(Board, Line, Column, Piece):-
+    check_crosscut_right_top(Board, Line, Column, Piece),
+    check_crosscut_left_top(Board, Line, Column, Piece),
+    check_crosscut_left_bottom(Board, Line, Column, Piece),
+    check_crosscut_right_bottom(Board, Line, Column, Piece).
+
+check_crosscut(Board, 1, Column, Piece):-
+    check_crosscut_left_bottom(Board, 1, Column, Piece),
+    check_crosscut_right_bottom(Board, 1, Column, Piece).
+
+check_crosscut(Board, 9, Column, Piece):-
+    check_crosscut_left_top(Board, 9, Column, Piece),
+    check_crosscut_right_top(Board, 9, Column, Piece).
+
+check_crosscut(Board, Line, 1, Piece):-
+    check_crosscut_right_top(Board, Line, 1, Piece),
+    check_crosscut_right_bottom(Board, Line, 1, Piece).
+
+check_crosscut(Board, Line, 9, Piece):-
+    check_crosscut_left_top(Board, Line, 9, Piece),
+    check_crosscut_left_bottom(Board, Line, 9, Piece).
+
+check_crosscut(Board, 1, 1, Piece):-
+    check_crosscut_right_bottom(Board, 1, 1, Piece).
+
+check_crosscut(Board, 1, 9, Piece):-
+    check_crosscut_left_bottom(Board, 1, 9, Piece).
+
+check_crosscut(Board, 9 , 1, Piece):-
+    check_crosscut_right_top(Board, 9, 1 , Piece).
+
+check_crosscut(Board, 9, 9, Piece):-
+    check_crosscut_left_top(Board, 9, 9, Piece).
+
+
+
+
+
+choose_coords(Board, Line, Column, Piece):-
     write('Line: '),
     read(Line),
     %nl,
     write('Column: '),
     read(Column),
     getCell(Line,Column, Board, Cell),
-    Cell = 0.
-    %(Cell =:= 0 -> write('ok');  write('not a valid play: already has a piece there'), nl, choose_coords(Board, Line1, Column1)).
+    Cell = 0,
+    check_crosscut(Board, Line, Column, Piece).
 
-choose_coords(Board, Line, Column):-write('Erro'),nl,choose_coords(Board, Line, Column),!.
+choose_coords(Board, Line, Column, Piece):-write('Erro'),nl,choose_coords(Board, Line, Column, Piece),!.
 
 human_play(P, 1,  Line, Column, Board, Result) :-
-    choose_coords(Board, Line, Column),
+    choose_coords(Board, Line, Column, P),
     write(Line),
     write(Column),
     setCell(Line, Column, Board, P, Result, Sucess).
