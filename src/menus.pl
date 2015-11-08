@@ -1,8 +1,6 @@
 %               %
 %     MENUS     %
 %               %
- 
-:- include('print.pl').
 
 mainMenu:- 
 	printMainMenu,
@@ -54,9 +52,9 @@ gameModeMenu:-
 
 printGameModeMenu:-
 	clearScreen,
-	write('                                  '), nl,
-	write('      ===> Game Options <===      '), nl,
-	write('                                  '), nl,
+	write('                                 '), nl,
+	write('      ===> Game Options <===     '), nl,
+	write('                                 '), nl,
 	write('================================='), nl,
 	write('================================='), nl,
 	write('==                             =='), nl,
@@ -74,7 +72,7 @@ playerVsPlayer:-
 	write('                                          '), nl,
 	write('    ==> Player vs Player  mode choosen    '), nl,
 	write('                                          '), nl,
-	start,
+	startHvsH,
 	pressEnter, nl.
 
 
@@ -83,6 +81,7 @@ playerVsComputer:-
 	write('                                         '), nl,
 	write('    ==> Player vs Computer mode choosen  '), nl,
 	write('                                         '), nl,
+	startCvsH,
 	pressEnter, nl.
 
 
@@ -91,6 +90,7 @@ computerVsComputer:-
 	write('                                          '), nl,
 	write('  ==> Computer vs Computer  mode choosen  '), nl,
 	write('                                          '), nl,
+	startCvsC,
 	pressEnter, nl.
 
 
