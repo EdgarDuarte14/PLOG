@@ -62,3 +62,28 @@ setCell(N, Col, [H|T], Piece, [H|T1], Sucess):- Previous is N-1, setCell(Previou
 
 setCellCol(1, [_|T], Piece, [Piece|T]).
 setCellCol(N, [H|T], Piece, [H|T1]):- Previous is N-1, setCellCol(Previous, T, Piece, T1).
+
+
+
+% Funcao aula  - contar o numero de 1s no tabuleiro %
+
+conta_peca1([],_).conta_peca1([V|T], N):-
+    var(V),
+    V #= 1,
+    M is N+1,
+    conta_peca1(T,M).
+
+
+conta_peca1([V|T], N):-
+    var(V),
+    V #= 0,
+    conta_peca1(T,M).
+
+conta_peca1([V|Mais], N):-
+    V==1,
+    conta_peca1(Mais, M),
+    N is M+1.
+
+conta_peca1([V|Mais], N):-
+    V==0,
+    conta_peca1(Mais, M).
