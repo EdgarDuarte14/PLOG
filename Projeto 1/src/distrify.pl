@@ -37,7 +37,7 @@ write_line([H|T]):-
 
 show_lines(_, []).
 show_lines(N, [H|T]):-
-    write(N), write('|    |    |    |    |    |    |    |    |    | \n'),write(' '), write_line(H), nl, write(' |____|____|____|____|____|____|____|____|____|'), nl,
+     write('|    |    |    |    |    |    |    |    |    | \n'),write(' '), write_line(H), nl, write(' |____|____|____|____|____|____|____|____|____|'), nl,
     N2 is N+1,
     show_lines(N2, T).
 

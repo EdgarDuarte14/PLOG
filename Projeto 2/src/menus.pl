@@ -24,22 +24,22 @@ printMainMenu:-
 	write('==================================='), nl,
 	write('==================================='), nl,
 	write('==                               =='), nl,
-	write('==    1. Play                    =='), nl,
-	write('==    2. About the game          =='), nl,
+	write('==    1. Solve                   =='), nl,
+	write('==    2. About the project       =='), nl,
 	write('==    3. Exit                    =='), nl,
 	write('==                               =='), nl,
 	write('==================================='), nl,
 	write('==================================='), nl,
-	write('Choose your game option:'), nl.
+	write('Choose your menu option:'), nl.
 
 
 gameModeMenu:-
 	printGameModeMenu,
 	getChar(Input),
 	(
-		Input = '1' -> 6x6;
-		Input = '2' -> 8x8;
-		Input = '3' -> 10x10;
+		Input = '1' -> tictac6x6;
+		Input = '2' -> tictac8x8;
+		Input = '3' -> tictac10x10;
 		Input = '4';
 
 		nl,
@@ -51,7 +51,7 @@ gameModeMenu:-
 printGameModeMenu:-
 	clearScreen,
 	write('                                 '), nl,
-	write('      ===> Game Options <===     '), nl,
+	write('    ===> Puzzle Options <===     '), nl,
 	write('                                 '), nl,
 	write('================================='), nl,
 	write('================================='), nl,
@@ -65,30 +65,30 @@ printGameModeMenu:-
 	write('================================='), nl,
 	write('Choose your game option:'), nl.
 
-6x6:-
+tictac6x6:-
 	clearScreen,
 	write('                                          '), nl,
 	write('          ==> 6x6 mode choosen            '), nl,
 	write('                                          '), nl,
-	startHvsH,
+	tictac(6),
 	pressEnter, nl.
 
 
-8x8:-
+tictac8x8:-
 	clearScreen,
 	write('                                         '), nl,
 	write('          ==> 8x8 mode choosen           '), nl,
 	write('                                         '), nl,
-	startCvsH,
+	tictac(8),
 	pressEnter, nl.
 
 
-10x10:-
+tictac10x10:-
 	clearScreen,
 	write('                                          '), nl,
 	write('          ==> 10x10 mode choosen          '), nl,
 	write('                                          '), nl,
-	startCvsC,
+	tictac(10),
 	pressEnter, nl.
 
 
