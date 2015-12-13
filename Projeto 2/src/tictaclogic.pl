@@ -19,7 +19,15 @@ tictac(10):-
         starting_state10x10(Board), principal(Board, 10).
 
 
-starting_state6x6([[C1,C2,C3,C4,C5,C6],
+starting_state6x6([[ C1, C2, 1,C4, C5, C6],
+                   [ C7, C8, 1,C10,C11,C12],
+                   [ 1,C14,C15,C16,C17, 1],
+                   [C19,C20, 0,C22,C23,C24],
+                   [C25, 1,C27,C28,C29, 1],
+                   [ 0,C32,C33,C34, 0,C36]
+                  ]).
+
+starting_state6x6_empty([[C1,C2,C3,C4,C5,C6],
                 [C7,C8,C9,C10,C11,C12],
                 [C13,C14,C15,C16,C17,C18],
                 [C19,C20,C21,C22,C23,C24],
@@ -54,6 +62,9 @@ printInitialSeperator(N):-
  write( '-----'),
  N1 is N-1,
  printInitialSeperator(N1).
+
+write_piece(1):-write('| X  ').
+write_piece(0):-write('| 0  ').
 
 
 write_line([]):- write('|').
@@ -111,7 +122,11 @@ principal(Board, N):-
     transpose(Board, Columns),
     apply_restrictions(Board, N),
     apply_restrictions(Columns, N),
+    statistics(walltime, _),
     labeling([variable(choose_var)], Vars),
+    statistics(walltime, [_, ElapsedTime | _]),
+    format('~nElapsed time: ~3d seconds', ElapsedTime), nl,
+    fd_statistics,
     show_board(Board).
 
 
@@ -135,7 +150,7 @@ get_compare_lists([_], [_], Results).
 get_compare_lists([], [],  Results).
 
 get_compare_lists([H1| T], [H2| T2], [N1 | Results]):-
-    N1 #= (H1 #= H2),
+    N1 #= (H1 #\= H2),
     get_compare_lists(T, T2, Results).
 
 check_unique(Results):-
